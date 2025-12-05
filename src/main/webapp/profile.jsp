@@ -24,6 +24,7 @@ if (user == null) {
         <%= user.getName() %>
         <br>
         <%= user.getEmail() %>
+        <div>hello</div>
         
         
     </body>
