@@ -4,6 +4,7 @@
     Author     : abhis
 --%>
 
+<%@page import="com.blog.entities.Message"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -48,6 +49,19 @@
                             <div class="card-header primary-background text-white text-center">
                                 <h3>Login Here</h3>
                             </div>
+                            
+                            <%
+                                Message m = (Message) session.getAttribute("msg");
+                                if (m != null) {
+                                %>
+                                <div class  ="alert <%= m.getCssClass() %>" id="alert-banner" role="alert"
+                                     style="position: fixed; top: 10%; z-index: 9999;"> <%= m.getContent() %></div >
+                            <%
+                                session.removeAttribute("msg");
+                                }
+                            %>
+                            
+                            
                             <div class="card-body">
                                 <form action="LoginServlet" method="post">
                                     <div class="mb-3">
@@ -88,5 +102,14 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
         
         <script src="js/myJs.js" type="text/javascript"></script>
+        
+        <script>
+            setTimeout(() => {
+                const alert = document.getElementById("alert-banner");
+                if(alert) alert.remove();
+            }, 4000);
+        </script>
+        
+        
     </body>
 </html>
