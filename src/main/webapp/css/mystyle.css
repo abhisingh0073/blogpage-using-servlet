@@ -5,3 +5,33 @@ body{
     background: #2196f3 !important;
 }
 
+
+
+
+/*profile togle*/ 
+
+.profile-pic-box {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-pic-icon{
+    max-width: 150px;
+    border-radius: 50%;
+    border: solid #ddd 2px;
+}
+
+.edit-icon {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 28px;
+    color: #0d6efd;
+    background: white;
+    border-radius: 50%;
+    padding: 4px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+}
+
+

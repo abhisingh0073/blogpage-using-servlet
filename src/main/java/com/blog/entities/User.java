@@ -12,6 +12,7 @@ public class User {
    private String password;
    private Timestamp dateTime;
    private String profile;
+   private String about;
 
     public User(int id, String name, String email, String password, Timestamp dateTime, String profile) {
         this.id = id;
@@ -82,6 +83,14 @@ public class User {
     public String getProfile(){
         return profile;
     }    
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
+    }
     
     
     
