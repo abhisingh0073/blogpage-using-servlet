@@ -34,6 +34,7 @@ public class UserDao {
                 user.setPassword(rs.getString("password"));
                 user.setDateTime(rs.getTimestamp("created_at"));
                 user.setProfile(rs.getString("profile"));
+                user.setAbout(rs.getString("about"));
             }
             
         } catch (Exception e) {
@@ -106,6 +107,7 @@ public class UserDao {
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getProfile());
             ps.setString(4, user.getAbout());
+            ps.setInt(5, user.getId());
             
             
             ps.executeUpdate();

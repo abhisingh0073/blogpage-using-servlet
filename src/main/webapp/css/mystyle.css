@@ -16,9 +16,11 @@ body{
 }
 
 .profile-pic-icon{
-    max-width: 150px;
-    border-radius: 50%;
-    border: solid #ddd 2px;
+     width: 150px;
+    height: 150px;
+    object-fit: cover;     
+    border-radius: 50%;    
+    border: 3px solid #ddd;
 }
 
 .edit-icon {

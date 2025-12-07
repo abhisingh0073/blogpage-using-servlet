@@ -5,11 +5,15 @@
 package com.blog.servlets;
 
 import com.blog.dao.UserDao;
+import com.blog.entities.Message;
 import com.blog.entities.User;
 import com.blog.helper.ConnectionProvider;
+import com.blog.helper.Helper;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +24,7 @@ import javax.servlet.http.Part;
  *
  * @author abhis
  */
+@MultipartConfig
 public class EditServlet extends HttpServlet {
 
     
@@ -36,6 +41,7 @@ public class EditServlet extends HttpServlet {
             out.println("<body>");
             
 //            fetch all data
+              
               String userName = request.getParameter("user_name");
               String userEmail = request.getParameter("user_email");
               String userAbout = request.getParameter("user_about");
@@ -43,32 +49,79 @@ public class EditServlet extends HttpServlet {
               String imageName = part.getSubmittedFileName();
               
               
+              
+              
 //              get the user from session..
 
               HttpSession s = request.getSession();
               User user = (User)s.getAttribute("currentUser");
               
+              user.setId(user.getId());
               user.setName(userName);
               user.setEmail(userEmail);
               user.setAbout(userAbout);
-              user.setProfile(imageName);
               
+              String oldImage = user.getProfile();
               
-              UserDao dao = new UserDao(ConnectionProvider.getConnection());
-              
-              boolean ans = dao.updateUser(user);
-              
-              if(ans){
-                  out.println("updated");
+              if(imageName != null && !imageName.trim().equals("")){
+//                  here i add userId in the name of file
+                  user.setProfile(user.getId()+"/"+imageName);
               } else{
-                  out.println("updated");
+                  user.setProfile(oldImage);
               }
               
               
               
+              UserDao dao = new UserDao(ConnectionProvider.getConnection());
+              boolean ans = dao.updateUser(user);
               
               
               
+              
+//           delting previous profile
+             
+             String path = getServletContext().getRealPath("img")+File.separator+user.getId();
+             File filePath = new File(path);
+             
+             
+             if(!filePath.exists()) filePath.mkdirs();
+             
+             
+             String oldPath = path + File.separator + oldImage;
+             String newPath = path + File.separator + imageName;
+             
+             System.out.println("UPLOAD PATH = " + newPath);
+            out.println(newPath);
+
+            if (imageName != null && !imageName.trim().equals("")) {
+
+//                 Delete old file if default
+                Helper.deleteFile(oldPath);
+
+//                   save new file
+                if (Helper.saveFile(part.getInputStream(), newPath)) {
+                    out.println("Profile updated");
+
+                    Message msg = new Message("Profile Updated Successfully!", "success", "alert-success");
+                    s.setAttribute("msg", msg);
+
+                } else {
+                    Message msg = new Message("Profile data is not upadated ! ", "error", "alert-danger");
+                    s.setAttribute("msg", msg);
+                }
+
+            } else {
+//                Message msg = new Message("Something went wrong!", "error", "alert-danger");
+//                s.setAttribute("msg", msg);
+            }
+
+            Message msg = new Message("Profile Updated Successfully!", "success", "alert-success");
+            s.setAttribute("msg", msg);
+
+
+            response.sendRedirect("profile.jsp");
+
+
             
             out.println("</body>");
             out.println("</html>");
@@ -113,5 +166,9 @@ public class EditServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private String path() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
 }

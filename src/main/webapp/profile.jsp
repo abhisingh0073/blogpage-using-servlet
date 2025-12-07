@@ -1,3 +1,4 @@
+<%@page import="com.blog.entities.Message"%>
 <%@page import="com.blog.entities.User"%>
 <%@page errorPage="error_page.jsp" %>
 
@@ -92,6 +93,40 @@
 
 
         <!--end of navbar-->
+        
+        
+        
+        
+        <!--message-->
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                                                        
+                            <%
+                                Message m = (Message) session.getAttribute("msg");
+                                if (m != null) {
+                                %>
+                                <div class  ="alert <%= m.getCssClass() %>" id="alert-banner" role="alert"
+                                     style="position: fixed; top: 10%; z-index: 9999;"> <%= m.getContent() %></div >
+                            <%
+                                session.removeAttribute("msg");
+                                }
+                            %>
+                            
+                            
+                            
+                            
+                            
 
 
 
@@ -111,7 +146,7 @@
                             <div class="profile-pic-box">
                                 <img id="profile-img" src="img/<%= user.getProfile()%>" alt="Profile" class="profile-pic-icon">
                                 <i class="fa-solid fa-circle-plus edit-icon"id="edit-icon"></i>
-                                <input type="file" id="profile-input" accept="image/*" style="display: none;">
+                                <input type="file" name="user_profile" id="profile-input" accept="image/*" style="display: none;">
                             </div>
 
 
@@ -161,7 +196,7 @@
 
                             <!--profile edit-->
                             <div id="profile-edit" style="display: none">
-                               <form action="EditServlet" method="post" enctype="multipart/form-data">
+                               <form id="profile-form" action="EditServlet" method="post" enctype="multipart/form-data">
                                     
                                     
                                     <!--add hidden input to send the new profile data to server because  input for new profile in present outside the form-->
@@ -197,7 +232,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" id="close-btn" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button id="edit-profile-btn" class="btn btn-primary">Edit</button>
+                        <button id="edit-profile-btn" form="profile-form" class="btn btn-primary">Edit</button>
                     </div>
                 </div>
             </div>
@@ -221,14 +256,24 @@
             $(document).ready(function () {
 //                let editStatus = false;
 
-                $('#edit-profile-btn').click(function () {
+                let isEditMode = false;
+                $('#edit-profile-btn').click(function (e) {
+                    
+                    
+                  if(!isEditMode){ 
+                      e.preventDefault();
+                      isEditMode = true; 
+                  }
+
+                    
 
                     $('#profile-details').hide();
                     $('#profile-edit').show();
 
 //                    here "this" denote to edit-profile-btn
                     $(this).text("Save");
-                    $(this).attr("type", "submit");
+             
+         
 
                     $("#close-btn").text("Back");
                     $("#close-btn").addClass("back-btn");
@@ -236,7 +281,7 @@
                     // IMPORTANT: Prevent the modal from closing
                     $("#close-btn").removeAttr("data-bs-dismiss");
                     
-//                    input-icon
+//                    showing input-icon
                     $("#edit-icon").show();
                 });
 
@@ -246,24 +291,26 @@
                     $('#profile-edit').hide();
 
                     $('#edit-profile-btn').text("Edit");
+                    $("#edit-profile-btn").removeAttr("type");
 
                     $("#close-btn").text("Close");
-                    $("#close-btn").removeClass("back-btn");
+                    $("#close-btn").removeClass("back-btn"); 
                     
                     $(this).removeAttr("type");
 
                     // Restore the attribute so modal can close again
                     $("#close-btn").attr("data-bs-dismiss", "modal");
                     
+//                    hiding edit-icon
                     $("#edit-icon").hide();
+                    isEditMode = false;
+                    
                 });
                 
                 
-//                $(".save-class").click()
-
-
-
-
+                
+                
+                
                 $('.edit-icon').click(function () {
                     $('#profile-input').click();  // open file picker
                 });
@@ -273,16 +320,40 @@
                 
 //                sending file to input that present inside form
                 $('#profile-input').change(function(){
+                    
                     const file = this.files[0];
+                    
                     if(file){
                         const dt = new DataTransfer();
                         dt.items.add(file);
                         $('#hidden-profile-input')[0].files = dt.files;
+                        
+                        
+                        
+//                        preview the image instantly
+                        const reader = new FileReader();
+                        reader.onload = function(e){
+                            $("#profile-img").attr("src", e.target.result);
+                        };
+                        reader.readAsDataURL(file);
                     }
                 });
 
 
+
+
+
+
             });
+            
+            
+            
+            
+            
+            setTimeout(() => {
+                const alert = document.getElementById("alert-banner");
+                if(alert) alert.remove();
+            }, 4000);
 
 
 
