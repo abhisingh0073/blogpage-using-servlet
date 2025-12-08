@@ -20,7 +20,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -67,7 +67,7 @@
 
 
     </head>
-    <body>
+    
         <!--nave bar-->
         <nav class="navbar navbar-expand-lg bg-body-tertiary primary-background "style="position: relative; z-index: 999">
             <div class="container-fluid">
@@ -291,44 +291,44 @@
                     </div>
                     <div class="modal-body">
                         
-                        <form action="AddPostServlet" method="post">
+                        <form id="add-post-form" class="d-flex flex-column gap-3" action="AddPostServlet" method="post">
                             
-                            <div>
-                                <select class="form-control">
+                            <div class="form-group">
+                                <select class="form-control" name="cId">
                                 <option selected disabled>---Select Categories---</option>
                                 <%
                                 PostDao postd = new PostDao(ConnectionProvider.getConnection());
                                 ArrayList<Category> list = postd.getAllCategories();
                                 for(Category c : list){
-                                %><option><%=c.getName()%></option><%
+                                %><option value="<%=c.getCid()%>"><%=c.getName()%></option><%
                                     }
                                 %>
-                                
                             </select>  
                             </div>
                             
                             <div class="form-group">
-                                <input type="text" placeholder="Enter Post Title" class="form-control" >
+                                <input name="pTitle" type="text" placeholder="Enter Post Title" class="form-control" >
                             </div>
                             
                             <div class="form-group">
-                                <textarea class="form-control" style="height: 200px" placeholder="Enter Your Content"></textarea>
+                                <textarea name="pContent" class="form-control" style="height: 200px" placeholder="Enter Your Content"></textarea>
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" style="height: 200px" placeholder="Enter Your Program"></textarea>
+                                <textarea name="pCode" class="form-control" style="height: 200px" placeholder="Enter Your Program"></textarea>
                             </div>
                             
                             <div class="form-group">
                                 <label>Select Your pic</label>
-                                <input type="file">
+                                <br>
+                                <input type="file" name="pic">
+                            </div>
+                            
+                            <div class="container text-center" >
+                                <button type="submiy" class="btn btn-outline-primary">Post</button>
                             </div>
                             
                             
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
                     </div>
                 </div>
             </div>
@@ -459,7 +459,50 @@
 
         </script>
 
+        
+        
+        
+        
+         <!--now add post js-->
+         <script>
+             $(document).ready(function (e) {
+
+    $("#add-post-form").on("submit", function (event) {
+
+        event.preventDefault();
+        console.log("it is working");
+
+        let form = new FormData(this);
+
+        $.ajax({
+            url: "AddPostServlet",
+            type: 'POST',
+            data: form,
+            success: function (data, textStatus, jqXHR) {
+                console.log("Success:", data);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log("Error:", errorThrown);
+            },
+            processData: false,
+            contentType: false
+        });
+
+    });
+
+});
+
+         </script>
+             
+         
+         
+         
+         
+         
+         
+         
+         
 
 
-    </body>
-</html>
+    
+
