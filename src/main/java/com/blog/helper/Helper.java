@@ -14,15 +14,13 @@ import java.io.InputStream;
  */
 public class Helper {
     
-    public static boolean deleteFile(String path){
+    public static void deleteFile(String path){
         boolean f = false;
         
         File file = new File(path);
         if(file.exists()){
-            return file.delete();
+            file.delete();
         }
-        
-        return f;
     }
     
     
@@ -42,7 +40,6 @@ public class Helper {
             while((bytesRead = image.read(b)) != -1){
                 fos.write(b, 0, bytesRead);
             }
-            
             fos.close();
             
 

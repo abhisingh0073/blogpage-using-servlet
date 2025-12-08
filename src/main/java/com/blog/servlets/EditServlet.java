@@ -65,7 +65,7 @@ public class EditServlet extends HttpServlet {
               
               if(imageName != null && !imageName.trim().equals("")){
 //                  here i add userId in the name of file
-                  user.setProfile(user.getId()+"/"+imageName);
+                  user.setProfile(user.getId()+File.separator+imageName);
               } else{
                   user.setProfile(oldImage);
               }
@@ -87,16 +87,17 @@ public class EditServlet extends HttpServlet {
              if(!filePath.exists()) filePath.mkdirs();
              
              
-             String oldPath = path + File.separator + oldImage;
+             String oldPath = getServletContext().getRealPath("img") + File.separator + oldImage;
              String newPath = path + File.separator + imageName;
+             // we are using this hole code because with old image path already contain user.id and it make defecult to delete
              
-             System.out.println("UPLOAD PATH = " + newPath);
-            out.println(newPath);
-
             if (imageName != null && !imageName.trim().equals("")) {
 
 //                 Delete old file if default
-                Helper.deleteFile(oldPath);
+                if(!oldImage.equals("default.png")){
+                   Helper.deleteFile(oldPath); 
+                }
+                
 
 //                   save new file
                 if (Helper.saveFile(part.getInputStream(), newPath)) {

@@ -1,3 +1,7 @@
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.blog.entities.Category"%>
+<%@page import="com.blog.helper.ConnectionProvider"%>
+<%@page import="com.blog.dao.PostDao"%>
 <%@page import="com.blog.entities.Message"%>
 <%@page import="com.blog.entities.User"%>
 <%@page errorPage="error_page.jsp" %>
@@ -30,6 +34,35 @@
             .banner-background{
                 clip-path: polygon(0 0, 100% 0, 100% 76%, 81% 91%, 60% 84%, 39% 94%, 18% 89%, 0 100%);
             }
+
+
+            .add-post-btn {
+                border: 2px solid white;
+                border-radius: 10px;
+                padding: 6px 12px;
+                display: inline-block;
+                transition: all 0.3s ease;
+                font-weight: 600;
+            }
+
+            .add-post-btn i {
+                font-size: 18px;
+                font-weight: 900;
+                transition: all 0.2s ease;
+            }
+
+            .add-post-btn:hover {
+                background: white;
+                color: #0d6efd;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(255,255,255,0.3);
+            }
+
+            .add-post-btn:hover i {
+                transform: scale(1.2);
+            }
+
+
         </style>
 
 
@@ -66,6 +99,9 @@
                         <li class="nav-item">
                             <a a class="nav-link active" aria-current="page" href="#" ><i class="fa-solid fa-circle-user"></i> Contact Us</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link add-post-btn" href="#!" title="Add Post" data-bs-toggle="modal" data-bs-target="#add-post-modal"><i class="fa-solid fa-plus"></i></a>
+                        </li>
                     </ul>
 
                     <ul class="navbar-nav ml-auto d-flex align-items-center">
@@ -93,40 +129,40 @@
 
 
         <!--end of navbar-->
-        
-        
-        
-        
+
+
+
+
         <!--message-->
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                                                        
-                            <%
-                                Message m = (Message) session.getAttribute("msg");
-                                if (m != null) {
-                                %>
-                                <div class  ="alert <%= m.getCssClass() %>" id="alert-banner" role="alert"
-                                     style="position: fixed; top: 10%; z-index: 9999;"> <%= m.getContent() %></div >
-                            <%
-                                session.removeAttribute("msg");
-                                }
-                            %>
-                            
-                            
-                            
-                            
-                            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <%
+            Message m = (Message) session.getAttribute("msg");
+            if (m != null) {
+        %>
+        <div class  ="alert <%= m.getCssClass()%>" id="alert-banner" role="alert"
+             style="position: fixed; top: 10%; z-index: 9999;"> <%= m.getContent()%></div >
+        <%
+                session.removeAttribute("msg");
+            }
+        %>
+
+
+
+
+
 
 
 
@@ -196,13 +232,13 @@
 
                             <!--profile edit-->
                             <div id="profile-edit" style="display: none">
-                               <form id="profile-form" action="EditServlet" method="post" enctype="multipart/form-data">
-                                    
-                                    
+                                <form id="profile-form" action="EditServlet" method="post" enctype="multipart/form-data">
+
+
                                     <!--add hidden input to send the new profile data to server because  input for new profile in present outside the form-->
                                     <input type="file" name="user_profile" id="hidden-profile-input" style="display: none;">
-                                    
-                                    
+
+
                                     <table class="table">
                                         <tr>
                                             <td style="width: 25%; vertical-align: middle;"><strong>ID :</strong></td>
@@ -238,6 +274,69 @@
             </div>
         </div>
 
+        <!--end of model-->
+
+
+
+
+
+        <!--add post modal-->
+
+        <div class="modal fade" id="add-post-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create Post</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                        <form action="AddPostServlet" method="post">
+                            
+                            <div>
+                                <select class="form-control">
+                                <option selected disabled>---Select Categories---</option>
+                                <%
+                                PostDao postd = new PostDao(ConnectionProvider.getConnection());
+                                ArrayList<Category> list = postd.getAllCategories();
+                                for(Category c : list){
+                                %><option><%=c.getName()%></option><%
+                                    }
+                                %>
+                                
+                            </select>  
+                            </div>
+                            
+                            <div class="form-group">
+                                <input type="text" placeholder="Enter Post Title" class="form-control" >
+                            </div>
+                            
+                            <div class="form-group">
+                                <textarea class="form-control" style="height: 200px" placeholder="Enter Your Content"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" style="height: 200px" placeholder="Enter Your Program"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Select Your pic</label>
+                                <input type="file">
+                            </div>
+                            
+                            
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--end post modal-->
+
 
 
 
@@ -258,29 +357,29 @@
 
                 let isEditMode = false;
                 $('#edit-profile-btn').click(function (e) {
-                    
-                    
-                  if(!isEditMode){ 
-                      e.preventDefault();
-                      isEditMode = true; 
-                  }
 
-                    
+
+                    if (!isEditMode) {
+                        e.preventDefault();
+                        isEditMode = true;
+                    }
+
+
 
                     $('#profile-details').hide();
                     $('#profile-edit').show();
 
 //                    here "this" denote to edit-profile-btn
                     $(this).text("Save");
-             
-         
+
+
 
                     $("#close-btn").text("Back");
                     $("#close-btn").addClass("back-btn");
 
                     // IMPORTANT: Prevent the modal from closing
                     $("#close-btn").removeAttr("data-bs-dismiss");
-                    
+
 //                    showing input-icon
                     $("#edit-icon").show();
                 });
@@ -294,45 +393,45 @@
                     $("#edit-profile-btn").removeAttr("type");
 
                     $("#close-btn").text("Close");
-                    $("#close-btn").removeClass("back-btn"); 
-                    
+                    $("#close-btn").removeClass("back-btn");
+
                     $(this).removeAttr("type");
 
                     // Restore the attribute so modal can close again
                     $("#close-btn").attr("data-bs-dismiss", "modal");
-                    
+
 //                    hiding edit-icon
                     $("#edit-icon").hide();
                     isEditMode = false;
-                    
+
                 });
-                
-                
-                
-                
-                
+
+
+
+
+
                 $('.edit-icon').click(function () {
                     $('#profile-input').click();  // open file picker
                 });
-                
-                
-                
-                
+
+
+
+
 //                sending file to input that present inside form
-                $('#profile-input').change(function(){
-                    
+                $('#profile-input').change(function () {
+
                     const file = this.files[0];
-                    
-                    if(file){
+
+                    if (file) {
                         const dt = new DataTransfer();
                         dt.items.add(file);
                         $('#hidden-profile-input')[0].files = dt.files;
-                        
-                        
-                        
+
+
+
 //                        preview the image instantly
                         const reader = new FileReader();
-                        reader.onload = function(e){
+                        reader.onload = function (e) {
                             $("#profile-img").attr("src", e.target.result);
                         };
                         reader.readAsDataURL(file);
@@ -345,14 +444,15 @@
 
 
             });
-            
-            
-            
-            
-            
+
+
+
+
+
             setTimeout(() => {
                 const alert = document.getElementById("alert-banner");
-                if(alert) alert.remove();
+                if (alert)
+                    alert.remove();
             }, 4000);
 
 
