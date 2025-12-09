@@ -11,25 +11,33 @@ public class Post {
     private String pPic;
     private Timestamp pDate;
     private int catId;
+    private String pCode;
+    private int userId;
 
     public Post() {
     }
 
-    public Post(int pid, String pTitle, String pContent, String pPic, Timestamp pDate, int catId) {
+    public Post(int pid, String pTitle, String pContent, String pPic, Timestamp pDate, int catId, String pCode, int userId) {
         this.pid = pid;
         this.pTitle = pTitle;
         this.pContent = pContent;
         this.pPic = pPic;
         this.pDate = pDate;
         this.catId = catId;
+        this.pCode = pCode;
+        this.userId = userId;
     }
 
-    public Post(String pTitle, String pContent, String pPic, Timestamp pDate, int catId) {
+   
+
+    public Post(String pTitle, String pContent, String pPic, Timestamp pDate, int catId, String pCode, int userId) {
         this.pTitle = pTitle;
         this.pContent = pContent;
         this.pPic = pPic;
         this.pDate = pDate;
         this.catId = catId;
+        this.pCode = pCode;
+        this.userId = userId;
     }
 
     public int getPid() {
@@ -78,6 +86,24 @@ public class Post {
 
     public void setCatId(int catId) {
         this.catId = catId;
+    }
+
+    public String getpCode() {
+        return pCode;
+    }
+
+    public void setpCode(String pCode) {
+        this.pCode = pCode;
+    }
+    
+    
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
     
     

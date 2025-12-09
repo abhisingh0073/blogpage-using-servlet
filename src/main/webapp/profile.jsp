@@ -349,7 +349,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 
         <script src="js/myJs.js" type="text/javascript"></script>
-
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
         <script>
             $(document).ready(function () {
@@ -470,7 +470,6 @@
     $("#add-post-form").on("submit", function (event) {
 
         event.preventDefault();
-        console.log("it is working");
 
         let form = new FormData(this);
 
@@ -479,10 +478,25 @@
             type: 'POST',
             data: form,
             success: function (data, textStatus, jqXHR) {
-                console.log("Success:", data);
+                
+                if(data.trim() === 'done'){
+//                    $('#add-post-modal').modal('hide');
+                
+            swal({
+                title: "Good job!",
+                text: "Posted Successfully",
+                icon: "success",
+                buttons: false,
+                timer: 1000
+            });
+   
+                    
+                } else{
+                    swal("", "Something went wrong", "error");
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
-                console.log("Error:", errorThrown);
+                swal("", "Something went wrong", "error");
             },
             processData: false,
             contentType: false

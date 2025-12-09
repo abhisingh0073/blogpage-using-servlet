@@ -4,6 +4,7 @@
  */
 package com.blog.dao;
 import com.blog.entities.Category;
+import com.blog.entities.Post;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -42,4 +43,35 @@ public class PostDao {
     }
     
     
+    
+    
+    public boolean savePost(Post p){
+        boolean f = false;
+        
+        try {
+            
+            String query = "insert into post (pTitle, pContent, pPic, catId, pCode, userId) values(?,?,?,?,?,?)";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1, p.getpTitle());
+            ps.setString(2, p.getpContent());
+            ps.setString(3, p.getpPic());
+            ps.setInt(4, p.getCatId());
+            ps.setString(5, p.getpCode());
+            ps.setInt(6, p.getUserId());
+            
+            ps.executeUpdate();
+            
+            f = true;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            
+        }
+        
+        
+        
+        
+        
+        return f;
+    }
 }
